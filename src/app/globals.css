@@ -1,26 +1,43 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Editorial artisan palette in oklch */
+  --forest: oklch(0.32 0.025 140);
+  --moss: oklch(0.58 0.03 120);
+  --beige: oklch(0.94 0.015 75);
+  --wood: oklch(0.86 0.035 75);
+  --ink: oklch(0.22 0.012 60);
+  --paper: oklch(0.985 0.008 80);
+  --clay: oklch(0.62 0.09 45);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* Brand semantic tokens */
+  --color-forest: var(--forest);
+  --color-moss: var(--moss);
+  --color-beige: var(--beige);
+  --color-wood: var(--wood);
+  --color-ink: var(--ink);
+  --color-paper: var(--paper);
+  --color-clay: var(--clay);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scrollbar-gutter: stable;
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+.scroll-footprint {
+  position: absolute;
+  pointer-events: none;
+  opacity: 0.1;
+  transition:
+    opacity 1.2s ease-out,
+    transform 1.4s ease-out;
+  color: var(--color-clay);
+  mix-blend-mode: multiply;
+}
+
+.scroll-footprint.is-visible {
+  opacity: 0.14;
+  transform: translateY(-300px);
 }
