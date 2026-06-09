@@ -2,11 +2,12 @@ import Link from "next/link";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { Footprint } from "@/components/footprint";
+import { ReservaForm } from "@/components/ReservaForm";
 
 const faqs = [
   {
     q: "¿Cómo reservo?",
-    a: "La forma más rápida es WhatsApp. Mandanos un mensaje con tus fechas, la cantidad de personas y el tipo de alojamiento que buscás. Te respondemos en minutos.",
+    a: "Podés usar el formulario de reserva en esta misma página o escribirnos por WhatsApp con tus fechas, la cantidad de personas y el tipo de alojamiento que buscás. Te respondemos en minutos.",
   },
   {
     q: "¿Necesito pagar por adelantado?",
@@ -33,7 +34,7 @@ const faqs = [
 export const metadata = {
   title: "Contacto — Hostel Huellas Puelo",
   description:
-    "Escribinos por WhatsApp o Instagram para reservar o consultar por disponibilidad en Hostel Huellas Puelo, Lago Puelo.",
+    "Reservá online o escribinos por WhatsApp, Instagram o email. Hostel Huellas Puelo, Lago Puelo, Patagonia.",
 };
 
 export default function ContactoPage() {
@@ -58,36 +59,36 @@ export default function ContactoPage() {
               Hablemos.
             </h1>
             <p className="mt-8 text-lg md:text-xl text-paper/70 max-w-[52ch] mx-auto leading-relaxed">
-              Si tenés dudas, querés reservar o simplemente querés saber más de
-              Lago Puelo, escribinos. Respondemos rápido.
+              Reservá online, escribinos por WhatsApp o mandanos un email.
+              Respondemos rápido.
             </p>
           </div>
         </section>
 
-        {/* Opciones de contacto */}
-        <section className="bg-paper py-20 md:py-28 relative overflow-hidden">
+        {/* Canales de contacto */}
+        <section className="bg-paper py-20 md:py-24 relative overflow-hidden">
           <div className="texture-grain absolute inset-0" />
           <div className="max-w-5xl mx-auto px-6 relative">
-            <div className="grid md:grid-cols-2 gap-6 mb-16">
+            <div className="grid md:grid-cols-3 gap-5">
               <a
                 href="https://wa.me/5492944000000?text=Hola%20Huellas%2C%20quiero%20consultar"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group bg-beige border border-ink/5 rounded-sm p-10 hover:shadow-xl transition-all hover:-translate-y-1 flex flex-col gap-6"
+                className="group bg-beige border border-ink/5 rounded-sm p-8 hover:shadow-xl transition-all hover:-translate-y-1 flex flex-col gap-5"
               >
-                <div className="w-12 h-12 rounded-full bg-forest/10 flex items-center justify-center">
-                  <span className="text-forest font-serif text-xl">W</span>
+                <div className="w-11 h-11 rounded-full bg-forest/10 flex items-center justify-center shrink-0">
+                  <span className="text-forest font-serif text-lg">W</span>
                 </div>
-                <div>
-                  <h2 className="font-serif text-3xl text-forest mb-2">
+                <div className="flex-1">
+                  <h2 className="font-serif text-2xl text-forest mb-2">
                     WhatsApp
                   </h2>
-                  <p className="text-ink/60 leading-relaxed">
-                    La forma más rápida de hablar con nosotros. Respondemos
-                    todos los días, generalmente en menos de una hora.
+                  <p className="text-ink/60 leading-relaxed text-sm">
+                    La forma más rápida. Respondemos todos los días,
+                    generalmente en menos de una hora.
                   </p>
                 </div>
-                <div className="text-[11px] uppercase tracking-[0.2em] text-clay font-medium group-hover:text-forest transition-colors">
+                <div className="text-[10px] uppercase tracking-[0.2em] text-clay font-medium group-hover:text-forest transition-colors">
                   Escribir ahora →
                 </div>
               </a>
@@ -96,76 +97,105 @@ export default function ContactoPage() {
                 href="https://instagram.com/hostelhuellaspuelo"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group bg-beige border border-ink/5 rounded-sm p-10 hover:shadow-xl transition-all hover:-translate-y-1 flex flex-col gap-6"
+                className="group bg-beige border border-ink/5 rounded-sm p-8 hover:shadow-xl transition-all hover:-translate-y-1 flex flex-col gap-5"
               >
-                <div className="w-12 h-12 rounded-full bg-forest/10 flex items-center justify-center">
+                <div className="w-11 h-11 rounded-full bg-forest/10 flex items-center justify-center shrink-0">
                   <span className="text-forest font-serif text-sm font-medium">
                     IG
                   </span>
                 </div>
-                <div>
-                  <h2 className="font-serif text-3xl text-forest mb-2">
+                <div className="flex-1">
+                  <h2 className="font-serif text-2xl text-forest mb-2">
                     Instagram
                   </h2>
-                  <p className="text-ink/60 leading-relaxed">
-                    Seguinos para ver la vida cotidiana del hostel. También
-                    podés escribirnos por DM — respondemos por ahí también.
+                  <p className="text-ink/60 leading-relaxed text-sm">
+                    Seguinos para ver la vida del hostel. También podés
+                    escribirnos por DM.
                   </p>
                 </div>
-                <div className="text-[11px] uppercase tracking-[0.2em] text-clay font-medium group-hover:text-forest transition-colors">
+                <div className="text-[10px] uppercase tracking-[0.2em] text-clay font-medium group-hover:text-forest transition-colors">
                   @hostelhuellaspuelo →
                 </div>
               </a>
-            </div>
 
-            {/* Ubicación */}
-            <div className="bg-beige border border-ink/5 rounded-sm p-8 md:p-10">
-              <div className="grid md:grid-cols-2 gap-8 items-center">
-                <div>
-                  <h2 className="font-serif text-2xl md:text-3xl text-forest mb-4">
-                    Dónde estamos
+              <a
+                href="mailto:hostelhuellaslp@gmail.com"
+                className="group bg-beige border border-ink/5 rounded-sm p-8 hover:shadow-xl transition-all hover:-translate-y-1 flex flex-col gap-5"
+              >
+                <div className="w-11 h-11 rounded-full bg-forest/10 flex items-center justify-center shrink-0">
+                  <span className="text-forest font-serif text-sm font-medium">
+                    @
+                  </span>
+                </div>
+                <div className="flex-1">
+                  <h2 className="font-serif text-2xl text-forest mb-2">
+                    Email
                   </h2>
-                  <p className="text-ink/65 leading-relaxed mb-6">
-                    Hostel Huellas Puelo se encuentra en el ejido de Lago Puelo,
-                    Chubut — a 5 minutos del acceso al Parque Nacional y a 18 km
-                    de El Bolsón.
+                  <p className="text-ink/60 leading-relaxed text-sm">
+                    Para consultas que requieren más detalle o adjuntar
+                    documentación.
                   </p>
-                  <dl className="space-y-2 text-sm">
-                    <div className="flex gap-3">
-                      <dt className="text-[10px] uppercase tracking-[0.2em] text-clay font-semibold shrink-0 pt-0.5">
-                        Localidad
-                      </dt>
-                      <dd className="text-ink/65">Lago Puelo, Chubut</dd>
-                    </div>
-                    <div className="flex gap-3">
-                      <dt className="text-[10px] uppercase tracking-[0.2em] text-clay font-semibold shrink-0 pt-0.5">
-                        Referencia
-                      </dt>
-                      <dd className="text-ink/65">
-                        A 5 min del ingreso al Parque Nacional Lago Puelo
-                      </dd>
-                    </div>
-                    <div className="flex gap-3">
-                      <dt className="text-[10px] uppercase tracking-[0.2em] text-clay font-semibold shrink-0 pt-0.5">
-                        Indicaciones
-                      </dt>
-                      <dd className="text-ink/65">
-                        Te mandamos la ubicación exacta al confirmar tu reserva
-                      </dd>
-                    </div>
-                  </dl>
                 </div>
-                <div className="bg-forest/8 rounded-sm h-48 md:h-full min-h-[180px] flex items-center justify-center border border-forest/10">
-                  <div className="text-center">
-                    <Footprint
-                      rotate={-8}
-                      className="h-16 w-12 text-forest/25 mx-auto mb-3"
-                    />
-                    <p className="text-[11px] uppercase tracking-[0.2em] text-forest/40">
-                      Lago Puelo · Patagonia
-                    </p>
-                  </div>
+                <div className="text-[10px] uppercase tracking-[0.2em] text-clay font-medium group-hover:text-forest transition-colors break-all">
+                  hostelhuellaslp@gmail.com →
                 </div>
+              </a>
+            </div>
+          </div>
+        </section>
+
+        {/* Formulario de reserva */}
+        <ReservaForm />
+
+        {/* Ubicación + Mapa */}
+        <section className="bg-paper py-20 md:py-24 border-t border-ink/6">
+          <div className="max-w-5xl mx-auto px-6">
+            <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-start">
+              {/* Texto */}
+              <div>
+                <span className="text-[11px] uppercase tracking-[0.3em] text-clay font-semibold">
+                  Dónde estamos
+                </span>
+                <h2 className="font-serif text-3xl md:text-4xl text-forest mt-6 mb-6 leading-tight">
+                  Lago Puelo, Patagonia.
+                </h2>
+                <p className="text-ink/65 leading-relaxed mb-8 max-w-[44ch]">
+                  A 5 minutos del acceso al Parque Nacional Lago Puelo y a 18 km
+                  de El Bolsón. Te mandamos la ubicación exacta al confirmar tu
+                  reserva.
+                </p>
+                <dl className="space-y-4 text-sm">
+                  {[
+                    ["Localidad", "Lago Puelo, Chubut"],
+                    ["Referencia", "A 5 min del ingreso al Parque Nacional"],
+                    [
+                      "Cómo llegar",
+                      "En auto, remis desde El Bolsón, o en bici desde el centro del pueblo",
+                    ],
+                    ["Coordenadas", "-42.051° S, -71.598° O"],
+                  ].map(([label, val]) => (
+                    <div key={label} className="flex gap-4">
+                      <dt className="text-[10px] uppercase tracking-[0.2em] text-clay font-semibold shrink-0 pt-0.5 w-24">
+                        {label}
+                      </dt>
+                      <dd className="text-ink/65 leading-relaxed">{val}</dd>
+                    </div>
+                  ))}
+                </dl>
+              </div>
+
+              {/* Mapa */}
+              <div className="overflow-hidden rounded-sm ring-1 ring-black/5 shadow-xl h-80 lg:h-full min-h-[320px]">
+                <iframe
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2962.6188355707504!2d-71.59838812321728!3d-42.05135318789868!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x961beb42ac729895%3A0xd58bcea19a240428!2sHOSTEL%20HUELLAS%20-%20Alojamiento%20en%20Lago%20Puelo!5e0!3m2!1ses!2sar!4v1781013431706!5m2!1ses!2sar"
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0, display: "block" }}
+                  allowFullScreen
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  title="Ubicación de Hostel Huellas Puelo en Google Maps"
+                />
               </div>
             </div>
           </div>
@@ -193,7 +223,6 @@ export default function ContactoPage() {
                 </div>
               ))}
             </dl>
-
             <div className="mt-14 text-center">
               <p className="text-ink/55 mb-6">
                 ¿Tenés otra pregunta? Escribinos directamente.
@@ -210,21 +239,10 @@ export default function ContactoPage() {
           </div>
         </section>
 
-        {/* Cómo responden */}
-        <section className="bg-paper py-16 md:py-20 border-t border-ink/5">
-          <div className="max-w-3xl mx-auto px-6 text-center">
-            <p className="text-ink/50 text-sm leading-relaxed max-w-[52ch] mx-auto">
-              Respondemos por WhatsApp todos los días. En temporada alta (dic–feb)
-              puede demorar hasta 2–3 horas. Por Instagram respondemos también,
-              pero un poco más lento.
-            </p>
-          </div>
-        </section>
-
         {/* Links internos */}
-        <section className="bg-paper pb-20 md:pb-28">
+        <section className="bg-paper py-16 md:py-20 border-t border-ink/6">
           <div className="max-w-7xl mx-auto px-6">
-            <div className="border-t border-ink/8 pt-12 grid sm:grid-cols-3 gap-6">
+            <div className="grid sm:grid-cols-3 gap-5">
               {[
                 {
                   href: "/alojamiento",

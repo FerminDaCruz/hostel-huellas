@@ -11,6 +11,7 @@ const navLinks = [
   { href: "/lagopuelo", label: "Lago Puelo" },
   { href: "/galeria", label: "Galería" },
   { href: "/nosotros", label: "Nosotros" },
+  { href: "/contacto", label: "Contacto" },
 ];
 
 export function Header() {
