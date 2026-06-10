@@ -25,7 +25,12 @@ export const habitaciones: Habitacion[] = [
     price: "$20.000",
     tag: "Por noche / persona",
     img: "/habitaciones/habitacion-compartida-1.jpg",
-    images: ["/habitaciones/habitacion-compartida-1.jpg"],
+    images: [
+      "/habitaciones/habitacion-compartida-1.jpg",
+      "/habitaciones/habitacion-compartida-1.jpg",
+      "/habitaciones/habitacion-compartida-1.jpg",
+      "/habitaciones/habitacion-compartida-1.jpg",
+    ],
     includes: [
       "Cama con ropa de cama",
       "Baños compartidos con agua caliente",

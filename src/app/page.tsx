@@ -1,29 +1,42 @@
-import {
-  Differentiators,
-  Experience,
-  Explore,
-  FinalCta,
-  Hero,
-  ScrollFootprints,
-  Story,
-  Timeline,
-  WallOfFootprints,
-} from "@/components/mainpage";
+import Image from "next/image";
+import Link from "next/link";
+import { Header } from "@/components/layout/header";
+import { Footer } from "@/components/layout/footer";
+import { WallOfFootprints } from "@/components/mainpage";
+import { Footprint } from "@/components/footprint";
 
-export default function Home() {
+import {
+  Hero,
+  Historia,
+  AlojamientoPreview,
+  ExperienciasPreview,
+  HuellaConcepto,
+  PorQueHuellas,
+  LagoPueloTeaser,
+  CtaFinal,
+} from "@/components/Inicio";
+
+export const metadata = {
+  title: "Hostel Huellas Puelo — Lago Puelo, Patagonia",
+  description:
+    "Hostel con alma de aventura en Lago Puelo, Patagonia. Guía de montaña, fogones, comunidad de viajeros y el Parque Nacional en la puerta.",
+};
+
+export default function InicioPage() {
   return (
-    <div>
-      <Hero />
-      <div className="relative">
-        <ScrollFootprints />
-        <Story />
-        <Differentiators />
+    <>
+      <Header />
+      <main>
+        <Hero />
+        <Historia />
+        <PorQueHuellas />
+        <AlojamientoPreview />
+        <ExperienciasPreview />
         <WallOfFootprints />
-        <Timeline />
-        <Experience />
-      </div>
-      <Explore />
-      <FinalCta />
-    </div>
+        <LagoPueloTeaser />
+        <CtaFinal />
+      </main>
+      <Footer />
+    </>
   );
 }
