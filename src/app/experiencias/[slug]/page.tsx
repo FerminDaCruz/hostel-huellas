@@ -18,8 +18,20 @@ export async function generateMetadata({
   const a = actividades.find((x) => x.slug === slug);
   if (!a) return {};
   return {
-    title: `${a.title} — Hostel Huellas Puelo`,
+    title: `${a.title} en Lago Puelo — Hostel Huellas Puelo`,
     description: a.descLong,
+    alternates: { canonical: `/experiencias/${slug}` },
+    openGraph: {
+      title: `${a.title} en Lago Puelo — Hostel Huellas`,
+      description: a.descLong,
+      url: `/experiencias/${slug}`,
+      images: [{ url: a.img, width: 1200, height: 630, alt: `${a.title} — Lago Puelo, Patagonia` }],
+    },
+    twitter: {
+      title: `${a.title} en Lago Puelo — Hostel Huellas`,
+      description: a.descLong,
+      images: [a.img],
+    },
   };
 }
 

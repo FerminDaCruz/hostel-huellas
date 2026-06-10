@@ -25,6 +25,18 @@ export async function generateMetadata({
   return {
     title: `${h.title} — Hostel Huellas Puelo`,
     description: h.descLong,
+    alternates: { canonical: `/alojamiento/${slug}` },
+    openGraph: {
+      title: `${h.title} — Hostel Huellas Puelo`,
+      description: h.descLong,
+      url: `/alojamiento/${slug}`,
+      images: [{ url: h.img, width: 1200, height: 630, alt: h.title }],
+    },
+    twitter: {
+      title: `${h.title} — Hostel Huellas Puelo`,
+      description: h.descLong,
+      images: [h.img],
+    },
   };
 }
 

@@ -12,6 +12,19 @@ export const metadata = {
   title: "Experiencias — Hostel Huellas Puelo",
   description:
     "Trekking al Cerro Currumahuida, kayak, bosques nativos y salidas personalizadas con Maxi, guía de montaña de Lago Puelo.",
+  alternates: { canonical: "/experiencias" },
+  openGraph: {
+    title: "Experiencias en Lago Puelo — Hostel Huellas Puelo",
+    description:
+      "Trekking al Cerro Currumahuida, kayak, bosques nativos y salidas personalizadas con Maxi, guía de montaña de Lago Puelo.",
+    url: "/experiencias",
+    images: [{ url: "/exp-trek.jpg", width: 1200, height: 630, alt: "Trekking en Lago Puelo, Patagonia" }],
+  },
+  twitter: {
+    title: "Experiencias en Lago Puelo — Hostel Huellas",
+    description: "Trekking, kayak, bosques nativos y salidas con Maxi en Lago Puelo, Patagonia.",
+    images: ["/exp-trek.jpg"],
+  },
 };
 
 export default function ExperienciasPage() {

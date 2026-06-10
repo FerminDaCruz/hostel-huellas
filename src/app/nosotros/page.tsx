@@ -9,9 +9,22 @@ import { Ecosistema } from "@/components/nosotros/Ecosistema";
 import { CtaFinal } from "@/components/nosotros/CtaFinal";
 
 export const metadata = {
-  title: "Nosotros — Hostel Huellas Puelo",
+  title: "Nuestra Historia — Hostel Huellas Puelo",
   description:
     "La historia de Maxi y cómo nació Huellas Puelo en Lago Puelo, Patagonia. Conocé al fundador y guía de montaña detrás del hostel.",
+  alternates: { canonical: "/nosotros" },
+  openGraph: {
+    title: "La historia de Huellas Puelo — Lago Puelo, Patagonia",
+    description:
+      "Maxi dejó la ciudad en 2017 para construir un lugar donde los viajeros dejen su huella. Conocé la historia detrás del hostel.",
+    url: "/nosotros",
+    images: [{ url: "/maxi-portrait.jpg", width: 1200, height: 630, alt: "Maxi, fundador de Hostel Huellas Puelo" }],
+  },
+  twitter: {
+    title: "La historia de Huellas Puelo",
+    description: "Maxi dejó la ciudad en 2017 para construir un lugar donde los viajeros dejen su huella.",
+    images: ["/maxi-portrait.jpg"],
+  },
 };
 
 export default function NosotrosPage() {
