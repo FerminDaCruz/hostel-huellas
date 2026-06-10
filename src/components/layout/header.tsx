@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { Footprint } from "../footprint";
+import { Footprint } from "../shared/footprint";
 
 const navLinks = [
   { href: "/inicio", label: "Inicio" },

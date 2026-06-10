@@ -1,4 +1,4 @@
-import { Footprint } from "../footprint";
+import { Footprint } from "../shared/footprint";
 
 type Mark = {
   name: string;

@@ -101,21 +101,60 @@ export async function POST(req: NextRequest) {
   }
 
   // Real-time availability check
-  const conflict = await prisma.reserva.findFirst({
-    where: {
-      tipoAlojamiento: tipo,
-      AND: [
-        { checkIn: { lt: checkOut } },
-        { checkOut: { gt: checkIn } },
-      ],
-    },
-  });
+  if (tipo === "dorm") {
+    // Dorm has shared capacity: check that no night in the range exceeds DORM_CAPACITY
+    const overlapping = await prisma.reserva.findMany({
+      where: {
+        tipoAlojamiento: "dorm",
+        AND: [{ checkIn: { lt: checkOut } }, { checkOut: { gt: checkIn } }],
+      },
+      select: { checkIn: true, checkOut: true, cantPersonas: true },
+    });
 
-  if (conflict) {
-    return NextResponse.json(
-      { error: "Esas fechas no están disponibles para el tipo de alojamiento seleccionado." },
-      { status: 409 }
-    );
+    // Build a capacity map for the requested nights
+    const capacityMap = new Map<string, number>();
+    for (const r of overlapping) {
+      const cursor = new Date(r.checkIn);
+      cursor.setHours(0, 0, 0, 0);
+      const end = new Date(r.checkOut);
+      end.setHours(0, 0, 0, 0);
+      while (cursor < end) {
+        const key = cursor.toISOString().slice(0, 10);
+        capacityMap.set(key, (capacityMap.get(key) ?? 0) + r.cantPersonas);
+        cursor.setDate(cursor.getDate() + 1);
+      }
+    }
+
+    // Verify each requested night has enough remaining capacity
+    const cursor = new Date(checkIn);
+    cursor.setHours(0, 0, 0, 0);
+    const endDate = new Date(checkOut);
+    endDate.setHours(0, 0, 0, 0);
+    while (cursor < endDate) {
+      const key = cursor.toISOString().slice(0, 10);
+      const used = capacityMap.get(key) ?? 0;
+      if (used + cantPersonas > MAX_PERSONAS["dorm"]) {
+        return NextResponse.json(
+          { error: "No hay suficientes camas disponibles para esas fechas." },
+          { status: 409 }
+        );
+      }
+      cursor.setDate(cursor.getDate() + 1);
+    }
+  } else {
+    // privada / departamento: any overlap is a conflict
+    const conflict = await prisma.reserva.findFirst({
+      where: {
+        tipoAlojamiento: tipo,
+        AND: [{ checkIn: { lt: checkOut } }, { checkOut: { gt: checkIn } }],
+      },
+    });
+    if (conflict) {
+      return NextResponse.json(
+        { error: "Esas fechas no están disponibles para el tipo de alojamiento seleccionado." },
+        { status: 409 }
+      );
+    }
   }
 
   const huespedes = (body.huespedes as { nombre: string; apellido: string }[]) ?? [];

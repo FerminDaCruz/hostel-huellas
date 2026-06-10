@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useRef } from "react";
-import { Footprint } from "../footprint";
+import { Footprint } from "../shared/footprint";
 
 export function Hero() {
   const stampRef = useRef<HTMLDivElement>(null);

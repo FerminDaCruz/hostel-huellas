@@ -208,6 +208,8 @@ export function ReservaForm({ isAdmin = false, onSuccess }: Props) {
 
   const today = new Date();
   today.setHours(0, 0, 0, 0);
+  const maxDate = new Date(today);
+  maxDate.setMonth(maxDate.getMonth() + 6);
   const maxPersonas = tipo ? MAX_PERSONAS[tipo] : 10;
 
   // ── Success state (standalone, not inside admin modal) ─────────────────────
@@ -231,9 +233,15 @@ export function ReservaForm({ isAdmin = false, onSuccess }: Props) {
   }
 
   return (
-    <section className="bg-beige py-20 md:py-28 border-t border-ink/6 relative overflow-hidden">
-      <div className="texture-grain absolute inset-0" />
-      <div className="max-w-3xl mx-auto px-6 relative">
+    <div
+      className={
+        isAdmin
+          ? "relative"
+          : "bg-beige py-20 md:py-28 border-t border-ink/6 relative overflow-hidden"
+      }
+    >
+      {!isAdmin && <div className="texture-grain absolute inset-0" />}
+      <div className={isAdmin ? "" : "max-w-3xl mx-auto px-6 relative"}>
         {!isAdmin && (
           <div className="mb-12">
             <span className="text-[11px] uppercase tracking-[0.3em] text-clay font-semibold">
@@ -317,7 +325,7 @@ export function ReservaForm({ isAdmin = false, onSuccess }: Props) {
                   mode="range"
                   selected={range}
                   onSelect={setRange}
-                  disabled={[{ before: today }, ...blockedDates]}
+                  disabled={[{ before: today }, { after: maxDate }, ...blockedDates]}
                   locale={es}
                   numberOfMonths={2}
                   pagedNavigation
@@ -550,7 +558,7 @@ export function ReservaForm({ isAdmin = false, onSuccess }: Props) {
           </div>
         </div>
       )}
-    </section>
+    </div>
   );
 }
 

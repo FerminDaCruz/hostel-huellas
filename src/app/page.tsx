@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { WallOfFootprints } from "@/components/mainpage";
-import { Footprint } from "@/components/footprint";
+import { Footprint } from "@/components/shared/footprint";
 
 import {
   Hero,

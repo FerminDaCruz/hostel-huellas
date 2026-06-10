@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useRef } from "react";
-import { Footprint } from "../footprint";
+import { Footprint } from "../shared/footprint";
 
 /**
  * Decorative semi-transparent footprints that fade in as the user scrolls.
