@@ -53,7 +53,7 @@ export function Faq() {
             ¿Tenés otra pregunta? Escribinos directamente.
           </p>
           <a
-            href="https://wa.me/5492944000000?text=Hola%20Huellas%2C%20tengo%20una%20consulta"
+            href="https://wa.me/5492323334671?text=Hola%21%20Tengo%20una%20consulta%20sobre%20Hostel%20Huellas%20Puelo"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-block bg-forest text-beige px-10 py-4 rounded-full text-sm font-medium uppercase tracking-[0.2em] hover:bg-moss hover:scale-[1.02] transition-all shadow-xl"

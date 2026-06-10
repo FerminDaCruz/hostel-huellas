@@ -55,7 +55,7 @@ export function Footer() {
             </h3>
             <div className="space-y-4">
               <a
-                href="https://wa.me/5492944000000?text=Hola%20Huellas%2C%20quiero%20reservar"
+                href="https://wa.me/5492323334671?text=Hola%21%20Quiero%20reservar%20en%20Hostel%20Huellas%20Puelo%20%F0%9F%8C%BF"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-3 text-sm text-paper/55 hover:text-clay transition-colors group"

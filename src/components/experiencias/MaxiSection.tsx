@@ -34,7 +34,7 @@ export function MaxiSection() {
             </p>
           </div>
           <a
-            href="https://wa.me/5492944000000?text=Hola%20Maxi%2C%20quiero%20consultar%20por%20las%20salidas%20y%20actividades"
+            href="https://wa.me/5492323334671?text=Hola%20Maxi%21%20Quiero%20consultar%20por%20las%20salidas%20y%20actividades%20desde%20Huellas%20Puelo%20%F0%9F%8C%BF"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-block bg-forest text-beige px-8 py-3.5 rounded-full text-sm font-medium uppercase tracking-[0.2em] hover:bg-moss hover:-translate-y-0.5 transition-all shadow-lg"

@@ -52,7 +52,7 @@ export function DetailsGallery({ h }: { h: Habitacion }) {
                 {h.capacity}
               </div>
               <a
-                href={`https://wa.me/5492944000000?text=Hola%20Huellas%2C%20quiero%20consultar%20por%20${encodeURIComponent(h.title)}`}
+                href={`https://wa.me/5492323334671?text=Hola%21%20Quiero%20consultar%20disponibilidad%20para%20${encodeURIComponent(h.title)}%20en%20Hostel%20Huellas%20Puelo%20%F0%9F%8C%BF`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="mt-8 block w-full bg-forest text-beige text-center px-6 py-3.5 rounded-full text-sm font-medium uppercase tracking-[0.18em] hover:bg-moss hover:-translate-y-0.5 transition-all shadow-lg"

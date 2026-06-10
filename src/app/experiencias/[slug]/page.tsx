@@ -128,7 +128,7 @@ export default async function ExperienciaDetallePage({
 
                 <div className="bg-forest px-8 py-6 space-y-3">
                   <a
-                    href={`https://wa.me/5492944000000?text=Hola%20Huellas%2C%20quiero%20consultar%20por%20la%20actividad%20${encodeURIComponent(a.title)}`}
+                    href={`https://wa.me/5492323334671?text=Hola%20Maxi%21%20Quiero%20consultar%20por%20la%20actividad%20${encodeURIComponent(a.title)}%20%F0%9F%8C%BF`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="block w-full bg-clay text-paper text-center px-6 py-3.5 rounded-full text-sm font-medium uppercase tracking-[0.18em] hover:brightness-110 hover:-translate-y-0.5 transition-all shadow-lg"

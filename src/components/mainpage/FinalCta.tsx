@@ -32,7 +32,7 @@ export function FinalCta() {
         </p>
         <div className="mt-12 flex flex-wrap items-center justify-center gap-4">
           <a
-            href="https://wa.me/5492944000000?text=Hola%20Huellas%2C%20quiero%20reservar%20una%20estad%C3%ADa"
+            href="https://wa.me/5492323334671?text=Hola%21%20Quiero%20reservar%20una%20estad%C3%ADa%20en%20Hostel%20Huellas%20Puelo%20%F0%9F%8C%BF"
             target="_blank"
             rel="noopener noreferrer"
             className="bg-forest text-beige px-10 py-4 rounded-full text-sm font-medium uppercase tracking-[0.2em] hover:bg-moss hover:scale-[1.03] transition-all shadow-xl"
