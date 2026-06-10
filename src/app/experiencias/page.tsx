@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { actividades } from "@/lib/actividades";
+import { CtaComponent } from "@/components/shared/CtaComponent";
 
 export const metadata = {
   title: "Experiencias — Hostel Huellas Puelo",
@@ -103,8 +104,7 @@ export default function ExperienciasPage() {
                 Tu guía
               </span>
               <h2 className="font-serif text-4xl md:text-5xl font-medium text-forest leading-[1.05] text-balance">
-                Creció en esta montaña.{" "}
-                <em>Ahora quiere mostrártela.</em>
+                Creció en esta montaña. <em>Ahora quiere mostrártela.</em>
               </h2>
               <div className="space-y-5 text-ink/75 leading-relaxed text-lg max-w-[48ch]">
                 <p>
@@ -156,37 +156,11 @@ export default function ExperienciasPage() {
           </div>
         </section>
 
-        {/* CTA */}
-        <section className="bg-forest text-beige py-20 md:py-28">
-          <div className="max-w-3xl mx-auto px-6 text-center">
-            <span className="text-[11px] uppercase tracking-[0.3em] text-wood font-semibold">
-              ¿Querés que Maxi te lleve?
-            </span>
-            <h2 className="font-serif text-4xl md:text-5xl font-medium text-paper mt-6 leading-tight text-balance">
-              Armamos un plan a tu medida.
-            </h2>
-            <p className="mt-6 text-paper/65 max-w-[44ch] mx-auto leading-relaxed">
-              Decinos cuántos días tenés, qué nivel de actividad preferís y qué
-              querés ver. Maxi lo resuelve.
-            </p>
-            <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
-              <a
-                href="https://wa.me/5492944000000?text=Hola%20Maxi%2C%20quiero%20armar%20un%20plan%20de%20actividades"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-clay text-paper px-10 py-4 rounded-full text-sm font-medium uppercase tracking-[0.2em] hover:brightness-110 hover:scale-[1.02] transition-all shadow-xl"
-              >
-                Escribir a Maxi
-              </a>
-              <Link
-                href="/lagopuelo"
-                className="border border-beige/30 text-beige px-8 py-4 rounded-full text-sm font-medium uppercase tracking-[0.2em] hover:bg-beige/10 transition-all"
-              >
-                Qué hacer en Lago Puelo
-              </Link>
-            </div>
-          </div>
-        </section>
+        <CtaComponent
+          label="¿Querés que Maxi te lleve?"
+          title="Armamos un plan a tu medida."
+          desc="Decinos cuántos días tenés, qué nivel de actividad preferís y qué querés ver. Maxi lo resuelve."
+        />
       </main>
       <Footer />
     </>

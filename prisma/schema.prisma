@@ -1,0 +1,23 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Reserva {
+  id              String   @id @default(cuid())
+  creadoEn        DateTime @default(now())
+  nombre          String
+  apellido        String
+  email           String
+  telefono        String
+  dni             String
+  checkIn         DateTime
+  checkOut        DateTime
+  tipoAlojamiento String   // "dorm" | "privada" | "departamento"
+  cantPersonas    Int
+  huespedes       Json     // { nombre: string, apellido: string }[]
+  creadaPorAdmin  Boolean  @default(false)
+}

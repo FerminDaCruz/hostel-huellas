@@ -1,12 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import { google } from "googleapis";
+import { prisma } from "@/lib/prisma";
+import { verifySession } from "@/lib/admin-auth";
+import { cookies } from "next/headers";
 
 // ─── Rate limiting ────────────────────────────────────────────────────────────
-// In-memory: IP → timestamps of requests within the last 10 minutes.
-// Works within a single Node.js process (good enough for this traffic volume).
 const rateLimitMap = new Map<string, number[]>();
-
-const RATE_WINDOW_MS = 10 * 60 * 1000; // 10 min
+const RATE_WINDOW_MS = 10 * 60 * 1000;
 const RATE_MAX = 3;
 
 function checkRateLimit(ip: string): boolean {
@@ -31,53 +30,30 @@ function getIp(req: NextRequest): string {
   );
 }
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-function isoToDisplay(iso: string): string {
-  if (!iso) return "";
-  const [y, m, d] = iso.split("-");
-  return `${d}/${m}/${y}`;
-}
+// ─── Capacity per type ────────────────────────────────────────────────────────
+const MAX_PERSONAS: Record<string, number> = {
+  dorm: 10,
+  privada: 2,
+  departamento: 3,
+};
 
-function nowDisplay(): string {
-  const d = new Date();
-  const pad = (n: number) => String(n).padStart(2, "0");
-  return `${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
-}
-
-// ─── Sheet constants ──────────────────────────────────────────────────────────
-const HEADERS = [
-  "Timestamp",
-  "Nombre",
-  "Apellido",
-  "Email",
-  "Teléfono",
-  "DNI",
-  "Check-in",
-  "Check-out",
-  "Cant. Personas",
-  "Huéspedes adicionales",
-];
-
-const HEADER_BG = { red: 30 / 255, green: 58 / 255, blue: 47 / 255 }; // #1e3a2f
-const ROW_ALT_BG = { red: 240 / 255, green: 247 / 255, blue: 244 / 255 }; // #f0f7f4
-const WHITE = { red: 1, green: 1, blue: 1 };
-
-// ─── Route handler ────────────────────────────────────────────────────────────
+// ─── POST /api/reservas ───────────────────────────────────────────────────────
 export async function POST(req: NextRequest) {
   const ip = getIp(req);
 
-  // 1. Rate limiting
-  if (!checkRateLimit(ip)) {
+  // Check if request comes from admin (skip rate limit for admin)
+  const cookieStore = await cookies();
+  const sessionToken = cookieStore.get("admin_session")?.value ?? "";
+  const adminSecret = process.env.ADMIN_SECRET ?? "";
+  const isAdmin = sessionToken ? verifySession(sessionToken, adminSecret) : false;
+
+  if (!isAdmin && !checkRateLimit(ip)) {
     return NextResponse.json(
-      {
-        error:
-          "Demasiados intentos. Esperá unos minutos y volvé a intentar.",
-      },
+      { error: "Demasiados intentos. Esperá unos minutos y volvé a intentar." },
       { status: 429 }
     );
   }
 
-  // 2. Parse body
   let body: Record<string, unknown>;
   try {
     body = await req.json();
@@ -85,21 +61,15 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Datos inválidos." }, { status: 400 });
   }
 
-  // 3. Honeypot — si tiene valor, fingir éxito sin escribir nada
+  // Honeypot — fingir éxito sin guardar
   if (body._hp) {
     return NextResponse.json({ ok: true });
   }
 
-  // 4. Validate required fields
+  // Validate required fields
   const required = [
-    "nombre",
-    "apellido",
-    "email",
-    "telefono",
-    "dni",
-    "checkin",
-    "checkout",
-    "cantPersonas",
+    "nombre", "apellido", "email", "telefono", "dni",
+    "checkin", "checkout", "cantPersonas", "tipoAlojamiento",
   ];
   for (const field of required) {
     if (!body[field]) {
@@ -110,181 +80,61 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  // 5. Google Sheets config
-  const clientEmail = process.env.GOOGLE_CLIENT_EMAIL;
-  const spreadsheetId = process.env.GOOGLE_SHEET_ID;
-  const rawKey = process.env.GOOGLE_PRIVATE_KEY ?? "";
+  const tipo = String(body.tipoAlojamiento);
+  if (!["dorm", "privada", "departamento"].includes(tipo)) {
+    return NextResponse.json({ error: "Tipo de alojamiento inválido." }, { status: 400 });
+  }
 
-  // Normalize the private key regardless of how it was stored in .env:
-  // - Some platforms escape newlines as literal \n → replace them
-  // - Some wrap the whole value in extra quotes → strip them first
-  const normalizedKey = rawKey
-    .replace(/^["']|["']$/g, "")   // strip wrapping quotes if any
-    .replace(/\\n/g, "\n");         // convert literal \n to real newlines
-
-  if (!clientEmail || !normalizedKey || !spreadsheetId) {
-    console.error("Missing Google Sheets environment variables");
+  const cantPersonas = Number(body.cantPersonas);
+  const maxCap = MAX_PERSONAS[tipo] ?? 0;
+  if (cantPersonas < 1 || cantPersonas > maxCap) {
     return NextResponse.json(
-      { error: "Configuración del servidor incompleta. Contactanos por WhatsApp." },
-      { status: 500 }
+      { error: `Capacidad máxima para ${tipo}: ${maxCap} personas.` },
+      { status: 400 }
     );
   }
 
-  try {
-    // Use JWT directly — more reliable than GoogleAuth for service accounts
-    // when the private key has been through env-var serialization.
-    const auth = new google.auth.JWT({
-      email: clientEmail,
-      key: normalizedKey,
-      scopes: ["https://www.googleapis.com/auth/spreadsheets"],
-    });
+  const checkIn = new Date(String(body.checkin));
+  const checkOut = new Date(String(body.checkout));
+  if (isNaN(checkIn.getTime()) || isNaN(checkOut.getTime()) || checkIn >= checkOut) {
+    return NextResponse.json({ error: "Fechas inválidas." }, { status: 400 });
+  }
 
-    const sheets = google.sheets({ version: "v4", auth });
+  // Real-time availability check
+  const conflict = await prisma.reserva.findFirst({
+    where: {
+      tipoAlojamiento: tipo,
+      AND: [
+        { checkIn: { lt: checkOut } },
+        { checkOut: { gt: checkIn } },
+      ],
+    },
+  });
 
-    // 6. Check if headers exist
-    const headerCheck = await sheets.spreadsheets.values.get({
-      spreadsheetId,
-      range: "A1",
-    });
-
-    if (!headerCheck.data.values?.[0]?.[0]) {
-      // Write headers
-      await sheets.spreadsheets.values.update({
-        spreadsheetId,
-        range: "A1",
-        valueInputOption: "USER_ENTERED",
-        requestBody: { values: [HEADERS] },
-      });
-
-      // Format headers + freeze + auto-resize
-      await sheets.spreadsheets.batchUpdate({
-        spreadsheetId,
-        requestBody: {
-          requests: [
-            {
-              repeatCell: {
-                range: {
-                  sheetId: 0,
-                  startRowIndex: 0,
-                  endRowIndex: 1,
-                  startColumnIndex: 0,
-                  endColumnIndex: HEADERS.length,
-                },
-                cell: {
-                  userEnteredFormat: {
-                    backgroundColor: HEADER_BG,
-                    textFormat: {
-                      bold: true,
-                      foregroundColor: WHITE,
-                    },
-                    horizontalAlignment: "CENTER",
-                  },
-                },
-                fields:
-                  "userEnteredFormat(backgroundColor,textFormat,horizontalAlignment)",
-              },
-            },
-            {
-              updateSheetProperties: {
-                properties: {
-                  sheetId: 0,
-                  gridProperties: { frozenRowCount: 1 },
-                },
-                fields: "gridProperties.frozenRowCount",
-              },
-            },
-            {
-              autoResizeDimensions: {
-                dimensions: {
-                  sheetId: 0,
-                  dimension: "COLUMNS",
-                  startIndex: 0,
-                  endIndex: HEADERS.length,
-                },
-              },
-            },
-          ],
-        },
-      });
-    }
-
-    // 7. Build data row
-    const huespedes = (
-      body.huespedes as { nombre: string; apellido: string }[] | undefined
-    ) ?? [];
-
-    const rowData = [
-      nowDisplay(),
-      String(body.nombre),
-      String(body.apellido),
-      String(body.email),
-      String(body.telefono),
-      String(body.dni),
-      isoToDisplay(String(body.checkin)),
-      isoToDisplay(String(body.checkout)),
-      String(body.cantPersonas),
-      huespedes.map((h) => `${h.nombre} ${h.apellido}`).join(", "),
-    ];
-
-    // 8. Append row
-    const appendRes = await sheets.spreadsheets.values.append({
-      spreadsheetId,
-      range: "A:J",
-      valueInputOption: "USER_ENTERED",
-      requestBody: { values: [rowData] },
-    });
-
-    // 9. Alternating row color
-    const updatedRange = appendRes.data.updates?.updatedRange ?? "";
-    const match = updatedRange.match(/!A(\d+):/);
-    const rowNum = match ? parseInt(match[1]) : 2;
-    const rowIndex = rowNum - 1; // 0-indexed; index 0 = headers
-    // Even rowIndex (0-indexed) → data rows at index 2,4,6 get light green;
-    // odd rowIndex (1,3,5) → white. Headers are at index 0 (dark green).
-    const bgColor = rowIndex % 2 === 0 ? ROW_ALT_BG : WHITE;
-
-    await sheets.spreadsheets.batchUpdate({
-      spreadsheetId,
-      requestBody: {
-        requests: [
-          {
-            repeatCell: {
-              range: {
-                sheetId: 0,
-                startRowIndex: rowIndex,
-                endRowIndex: rowIndex + 1,
-                startColumnIndex: 0,
-                endColumnIndex: HEADERS.length,
-              },
-              cell: {
-                userEnteredFormat: { backgroundColor: bgColor },
-              },
-              fields: "userEnteredFormat(backgroundColor)",
-            },
-          },
-          {
-            autoResizeDimensions: {
-              dimensions: {
-                sheetId: 0,
-                dimension: "COLUMNS",
-                startIndex: 0,
-                endIndex: HEADERS.length,
-              },
-            },
-          },
-        ],
-      },
-    });
-
-    return NextResponse.json({ ok: true });
-  } catch (err) {
-    console.error("Google Sheets error:", err);
+  if (conflict) {
     return NextResponse.json(
-      {
-        error:
-          "Error al guardar la reserva. Intentá de nuevo o escribinos por WhatsApp.",
-      },
-      { status: 500 }
+      { error: "Esas fechas no están disponibles para el tipo de alojamiento seleccionado." },
+      { status: 409 }
     );
   }
+
+  const huespedes = (body.huespedes as { nombre: string; apellido: string }[]) ?? [];
+
+  const reserva = await prisma.reserva.create({
+    data: {
+      nombre: String(body.nombre),
+      apellido: String(body.apellido),
+      email: String(body.email),
+      telefono: String(body.telefono),
+      dni: String(body.dni),
+      checkIn,
+      checkOut,
+      tipoAlojamiento: tipo,
+      cantPersonas,
+      huespedes,
+      creadaPorAdmin: isAdmin,
+    },
+  });
+
+  return NextResponse.json({ ok: true, id: reserva.id });
 }

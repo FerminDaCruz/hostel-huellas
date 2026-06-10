@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { habitaciones } from "@/lib/alojamiento";
+import { CtaComponent } from "@/components/shared/CtaComponent";
 
 const practico = [
   { label: "Check-in", val: "A partir de las 14:00 hs" },
@@ -44,8 +45,7 @@ export default function AlojamientoPage() {
               Alojamiento
             </span>
             <h1 className="font-serif text-5xl md:text-7xl font-medium text-paper mt-6 leading-[0.95] text-balance max-w-3xl">
-              Tenemos el lugar para vos,{" "}
-              <em>seas como seas</em>.
+              Tenemos el lugar para vos, <em>seas como seas</em>.
             </h1>
             <p className="mt-6 text-lg md:text-xl text-paper/70 max-w-[52ch] leading-relaxed">
               Dos personas o veinte, solas o en grupo, con presupuesto ajustado
@@ -164,33 +164,10 @@ export default function AlojamientoPage() {
           </div>
         </section>
 
-        {/* CTA */}
-        <section className="bg-forest text-beige py-20 md:py-28">
-          <div className="max-w-3xl mx-auto px-6 text-center">
-            <span className="text-[11px] uppercase tracking-[0.3em] text-wood font-semibold">
-              ¿Tenés dudas?
-            </span>
-            <h2 className="font-serif text-4xl md:text-5xl font-medium text-paper mt-6 leading-tight text-balance">
-              Escribinos y armamos el plan a tu medida.
-            </h2>
-            <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
-              <a
-                href="https://wa.me/5492944000000?text=Hola%20Huellas%2C%20quiero%20consultar%20por%20alojamiento"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-clay text-paper px-10 py-4 rounded-full text-sm font-medium uppercase tracking-[0.2em] hover:brightness-110 hover:scale-[1.02] transition-all shadow-xl"
-              >
-                Consultar por WhatsApp
-              </a>
-              <Link
-                href="/contacto"
-                className="border border-beige/30 text-beige px-8 py-4 rounded-full text-sm font-medium uppercase tracking-[0.2em] hover:bg-beige/10 transition-all"
-              >
-                Otras formas de contacto
-              </Link>
-            </div>
-          </div>
-        </section>
+        <CtaComponent
+          title="Escribinos y armamos el plan a tu medida."
+          label="¿Tenés dudas?"
+        />
       </main>
       <Footer />
     </>
