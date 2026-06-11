@@ -3,6 +3,7 @@
 import { Fragment, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ReservaForm } from "@/components/shared/ReservaForm";
+import { OccupancyGrid } from "./OccupancyGrid";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 type Huesped = { nombre: string; apellido: string };
@@ -81,14 +82,25 @@ export function AdminDashboard({ reservas }: { reservas: Reserva[] }) {
 
   const [tab, setTab] = useState<"proximas" | "pasadas">("proximas");
   const [filterTipo, setFilterTipo] = useState<string>("todas");
+  const [searchQuery, setSearchQuery] = useState("");
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [showModal, setShowModal] = useState(false);
 
+  const isSearching = searchQuery.trim().length > 0;
+
   const source = tab === "proximas" ? upcoming : past;
-  const filtered =
-    filterTipo === "todas"
-      ? source
-      : source.filter((r) => r.tipoAlojamiento === filterTipo);
+  const filtered = isSearching
+    ? reservas.filter((r) => {
+        const q = searchQuery.toLowerCase().trim();
+        return (
+          r.nombre.toLowerCase().includes(q) ||
+          r.apellido.toLowerCase().includes(q) ||
+          `${r.nombre} ${r.apellido}`.toLowerCase().includes(q)
+        );
+      })
+    : filterTipo === "todas"
+    ? source
+    : source.filter((r) => r.tipoAlojamiento === filterTipo);
 
   async function handleLogout() {
     await fetch("/api/admin/logout", { method: "POST" });
@@ -252,12 +264,45 @@ export function AdminDashboard({ reservas }: { reservas: Reserva[] }) {
           </div>
         </div>
 
+        {/* ── Occupancy grid ── */}
+        <OccupancyGrid reservas={reservas} />
+
         {/* ── Table section ── */}
         <div>
           {/* Tabs + Toolbar */}
           <div className="flex flex-wrap items-center gap-3 mb-4">
-            {/* Tabs */}
-            <div className="flex rounded-sm border border-ink/10 overflow-hidden">
+            {/* Search */}
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="Buscar por nombre…"
+                value={searchQuery}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value);
+                  setExpandedId(null);
+                }}
+                className="text-sm border border-ink/15 rounded-sm pl-8 pr-8 py-1.5 bg-white text-ink w-52 focus:outline-none focus:border-forest"
+              />
+              <svg
+                className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-ink/35 pointer-events-none"
+                fill="none" stroke="currentColor" viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                  d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" />
+              </svg>
+              {isSearching && (
+                <button
+                  onClick={() => { setSearchQuery(""); setExpandedId(null); }}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 text-ink/40 hover:text-ink text-base leading-none"
+                  aria-label="Limpiar búsqueda"
+                >
+                  ×
+                </button>
+              )}
+            </div>
+
+            {/* Tabs — dimmed while searching */}
+            <div className={`flex rounded-sm border border-ink/10 overflow-hidden transition-opacity ${isSearching ? "opacity-40 pointer-events-none" : ""}`}>
               {[
                 { key: "proximas", label: `Próximas (${upcoming.length})` },
                 { key: "pasadas", label: `Pasadas (${past.length})` },
@@ -280,17 +325,27 @@ export function AdminDashboard({ reservas }: { reservas: Reserva[] }) {
               ))}
             </div>
 
-            {/* Filter */}
+            {/* Tipo filter — dimmed while searching */}
             <select
               value={filterTipo}
               onChange={(e) => setFilterTipo(e.target.value)}
-              className="text-sm border border-ink/15 rounded-sm px-3 py-1.5 bg-white text-ink"
+              disabled={isSearching}
+              className={`text-sm border border-ink/15 rounded-sm px-3 py-1.5 bg-white text-ink transition-opacity ${isSearching ? "opacity-40" : ""}`}
             >
               <option value="todas">Todos los tipos</option>
               <option value="dorm">Dormitorio compartido</option>
               <option value="privada">Habitación privada</option>
               <option value="departamento">Departamento</option>
             </select>
+
+            {/* Search results label */}
+            {isSearching && (
+              <span className="text-xs text-ink/50">
+                {filtered.length === 0
+                  ? "Sin resultados"
+                  : `${filtered.length} resultado${filtered.length !== 1 ? "s" : ""} en todas las reservas`}
+              </span>
+            )}
 
             <button
               onClick={() => setShowModal(true)}
@@ -321,6 +376,7 @@ export function AdminDashboard({ reservas }: { reservas: Reserva[] }) {
                       "Tipo",
                       "Pax",
                       "Origen",
+                      ...(isSearching ? ["Estado"] : []),
                     ].map((h) => (
                       <th
                         key={h}
@@ -386,6 +442,19 @@ export function AdminDashboard({ reservas }: { reservas: Reserva[] }) {
                               {r.creadaPorAdmin ? "Admin" : "Web"}
                             </span>
                           </td>
+                          {isSearching && (
+                            <td className="px-4 py-3">
+                              <span
+                                className={`text-[11px] px-2 py-0.5 rounded-full ${
+                                  new Date(r.checkIn) >= today
+                                    ? "bg-forest/10 text-forest"
+                                    : "bg-ink/8 text-ink/40"
+                                }`}
+                              >
+                                {new Date(r.checkIn) >= today ? "Futura" : "Pasada"}
+                              </span>
+                            </td>
+                          )}
                           <td className="px-4 py-3">
                             {hasCompanions && (
                               <button
@@ -404,7 +473,7 @@ export function AdminDashboard({ reservas }: { reservas: Reserva[] }) {
 
                         {isExpanded && (
                           <tr className="bg-beige/20">
-                            <td colSpan={11} className="px-8 py-3">
+                            <td colSpan={isSearching ? 12 : 11} className="px-8 py-3">
                               <p className="text-[10px] uppercase tracking-[0.2em] text-ink/40 font-semibold mb-2">
                                 Acompañantes
                               </p>

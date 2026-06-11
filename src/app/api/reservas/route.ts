@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { verifySession } from "@/lib/admin-auth";
+import { sendReservationEmails } from "@/lib/email-sender";
 import { cookies } from "next/headers";
 
 // ─── Rate limiting ────────────────────────────────────────────────────────────
@@ -174,6 +175,22 @@ export async function POST(req: NextRequest) {
       creadaPorAdmin: isAdmin,
     },
   });
+
+  // Send confirmation emails — non-blocking for the reservation itself
+  try {
+    await sendReservationEmails({
+        id: reserva.id,
+        nombre: reserva.nombre,
+        apellido: reserva.apellido,
+        email: reserva.email,
+        checkIn: reserva.checkIn,
+        checkOut: reserva.checkOut,
+        tipoAlojamiento: reserva.tipoAlojamiento,
+        cantPersonas: reserva.cantPersonas,
+      });
+  } catch (err) {
+    console.error("[email] failed to send reservation emails:", err);
+  }
 
   return NextResponse.json({ ok: true, id: reserva.id });
 }
