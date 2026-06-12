@@ -50,7 +50,7 @@ export function Hero() {
           </span>
           <h1 className="font-serif text-5xl md:text-7xl leading-[0.93] text-balance font-medium tracking-tight text-paper">
             No vengas solo a hospedarte.{" "}
-            <em className="text-wood">Vení a dejar tu huella.</em>.
+            <em className="text-wood">Vení a dejar tu huella.</em>
           </h1>
           <p className="text-lg md:text-xl text-pretty max-w-[52ch] leading-relaxed text-paper/85 font-light">
             Hostel en Lago Puelo con alma de aventura y gente de verdad. Un

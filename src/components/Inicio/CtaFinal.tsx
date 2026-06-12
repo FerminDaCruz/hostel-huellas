@@ -24,7 +24,7 @@ export function CtaFinal() {
           Las paredes <em>te esperan</em>.
         </h2>
         <p className="text-lg md:text-xl text-ink/75 mt-8 max-w-xl mx-auto leading-relaxed">
-          Más de 2.000 huellas en las paredes. La próxima puede ser la tuya.
+          Más de 100 huellas en las paredes. La próxima puede ser la tuya.
         </p>
         <div className="mt-12 flex flex-wrap items-center justify-center gap-4">
           <Link
@@ -33,14 +33,12 @@ export function CtaFinal() {
           >
             Reservar mi estadía
           </Link>
-          <a
-            href="https://instagram.com/hostelhuellaspuelo"
-            target="_blank"
-            rel="noopener noreferrer"
+          <Link
+            href="/alojamiento"
             className="text-forest underline underline-offset-4 decoration-clay decoration-2 text-sm uppercase tracking-[0.2em] font-medium px-4 py-2 hover:text-clay transition-colors"
           >
-            Ver en Instagram
-          </a>
+            Ver alojamientos
+          </Link>
         </div>
       </div>
     </section>

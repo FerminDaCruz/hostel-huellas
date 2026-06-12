@@ -41,8 +41,7 @@ export function PorQueHuellas() {
             Por qué Huellas
           </span>
           <h2 className="font-serif text-4xl md:text-6xl font-medium text-forest text-balance leading-[1.05] mt-6">
-            No somos para todos.{" "}
-            <em className="text-moss">¿Sos para nosotros?</em>
+            Mucho más que un <em className="text-moss">lugar para dormir</em>
           </h2>
         </div>
 

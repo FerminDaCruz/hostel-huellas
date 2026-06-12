@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { Footprint } from "../shared/footprint";
 
 const navLinks = [
-  { href: "/inicio", label: "Inicio" },
+  { href: "/", label: "Inicio" },
   { href: "/alojamiento", label: "Alojamiento" },
   { href: "/experiencias", label: "Experiencias" },
   { href: "/lagopuelo", label: "Lago Puelo" },
