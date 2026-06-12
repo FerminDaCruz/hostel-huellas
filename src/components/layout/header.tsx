@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useEffect, useState } from "react";
-import { Footprint } from "../shared/footprint";
 
 const navLinks = [
   { href: "/", label: "Inicio" },
@@ -35,17 +35,17 @@ export function Header() {
       }`}
     >
       <div className="max-w-7xl mx-auto px-6 h-16 md:h-20 flex items-center justify-between gap-8">
-        <Link href="/inicio" className="flex items-center gap-2.5 shrink-0">
-          <Footprint
-            className={`h-6 w-4 transition-colors duration-300 ${solid ? "text-clay" : "text-wood"}`}
-          />
-          <span
-            className={`font-serif text-xl font-medium tracking-tight transition-colors duration-300 ${
-              solid ? "text-forest" : "text-paper"
+        <Link href="/" className="flex items-center shrink-0">
+          <Image
+            src="/assets/logo.png"
+            alt="Hostel Huellas Puelo"
+            height={44}
+            width={44}
+            priority
+            className={`h-15 w-auto transition-all duration-300 ${
+              solid ? "" : "brightness-0 invert"
             }`}
-          >
-            Huellas Puelo
-          </span>
+          />
         </Link>
 
         <nav className="hidden lg:flex items-center gap-6 xl:gap-8">

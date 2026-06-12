@@ -1,12 +1,105 @@
 import Image from "next/image";
 
+type Foto = {
+  src: string;
+  alt: string;
+  title: string;
+  caption: string;
+  w: number;
+  h: number;
+};
+
 type Categoria = {
   id: string;
   label: string;
-  fotos: any[];
+  fotos: Foto[];
 };
 
 const categorias: Categoria[] = [
+  {
+    id: "habitaciones",
+    label: "Habitaciones",
+    fotos: [
+      {
+        src: "/assets/habitaciones/dorm-1.jpg",
+        alt: "Habitación compartida en Hostel Huellas Puelo",
+        title: "Habitación compartida",
+        caption: "Cinco camas, gente de todo el mundo y las mejores historias del viaje.",
+        w: 1024,
+        h: 768,
+      },
+      {
+        src: "/assets/habitaciones/privada-picos-1.jpg",
+        alt: "Habitación 3 Picos — habitación privada en Hostel Huellas Puelo",
+        title: "Habitación 3 Picos",
+        caption: "Las tres cumbres en el horizonte desde tu propia habitación.",
+        w: 1024,
+        h: 768,
+      },
+      {
+        src: "/assets/habitaciones/privada-cuevas-1.jpg",
+        alt: "Habitación Cuevas — habitación privada en Hostel Huellas Puelo",
+        title: "Habitación Cuevas",
+        caption: "Rústica, íntima y cálida. Con carácter propio.",
+        w: 1024,
+        h: 768,
+      },
+      {
+        src: "/assets/habitaciones/privada-huemul-1.jpg",
+        alt: "Habitación Huemul — habitación privada en Hostel Huellas Puelo",
+        title: "Habitación Huemul",
+        caption: "El refugio del viajero que quiere descansar de verdad.",
+        w: 1024,
+        h: 768,
+      },
+      {
+        src: "/assets/habitaciones/depto-1.jpg",
+        alt: "Departamento Currumahuida en Hostel Huellas Puelo",
+        title: "Departamento Currumahuida",
+        caption: "Living, cocina propia y baño. Tu casa en Lago Puelo.",
+        w: 1024,
+        h: 768,
+      },
+    ],
+  },
+  {
+    id: "espacios",
+    label: "Espacios comunes",
+    fotos: [
+      {
+        src: "/assets/habitaciones/cocina-1.jpg",
+        alt: "Cocina comunitaria en Hostel Huellas Puelo",
+        title: "Cocina comunitaria",
+        caption: "Equipada para que cocines como en casa. O mejor.",
+        w: 1024,
+        h: 768,
+      },
+      {
+        src: "/assets/habitaciones/living-1.jpg",
+        alt: "Living en Hostel Huellas Puelo",
+        title: "Living",
+        caption: "Donde los planes del día siguiente se hacen entre mates.",
+        w: 1024,
+        h: 768,
+      },
+      {
+        src: "/assets/habitaciones/cocina-2.jpg",
+        alt: "Cocina comunitaria — detalle",
+        title: "Todo lo que necesitás",
+        caption: "Garrafa, vajilla, heladera, freezer y los condimentos de siempre.",
+        w: 1024,
+        h: 768,
+      },
+      {
+        src: "/assets/habitaciones/dorm-bano-1.jpg",
+        alt: "Baño compartido en Hostel Huellas Puelo",
+        title: "Baños con agua caliente",
+        caption: "Limpios, con agua caliente y siempre en orden.",
+        w: 1024,
+        h: 768,
+      },
+    ],
+  },
   {
     id: "hostel",
     label: "El hostel",
@@ -18,6 +111,14 @@ const categorias: Categoria[] = [
         caption: "El hostel y su fundador son inseparables.",
         w: 1024,
         h: 1280,
+      },
+      {
+        src: "/assets/habitaciones/huellas-exterior.jpg",
+        alt: "Exterior e identidad de Hostel Huellas Puelo",
+        title: "Las huellas",
+        caption: "La identidad del hostel marcada en cada rincón.",
+        w: 1024,
+        h: 768,
       },
       {
         src: "/exp-breakfast.jpg",
@@ -34,21 +135,6 @@ const categorias: Categoria[] = [
         caption: "Las mejores conversaciones del viaje siempre arrancaron acá.",
         w: 1024,
         h: 1280,
-      },
-    ],
-  },
-  {
-    id: "huellas",
-    label: "Las huellas",
-    fotos: [
-      {
-        src: "/wall-footprints.jpg",
-        alt: "Muro de huellas pintadas en Hostel Huellas Puelo",
-        title: "El muro de huellas",
-        caption:
-          "Más de 2.000 historias pintadas. Una obra colectiva que crece sola.",
-        w: 1920,
-        h: 1080,
       },
     ],
   },
@@ -79,6 +165,14 @@ const categorias: Categoria[] = [
         caption: "El bosque empieza apenas cruzás el portón del hostel.",
         w: 1280,
         h: 1024,
+      },
+      {
+        src: "/assets/paisaje-brazo-oriental.webp",
+        alt: "Brazo oriental del Lago Puelo, Patagonia",
+        title: "Brazo Oriental",
+        caption: "El lado más salvaje del lago, a horas de caminata del hostel.",
+        w: 1600,
+        h: 1067,
       },
     ],
   },
