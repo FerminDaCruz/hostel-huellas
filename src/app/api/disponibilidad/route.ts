@@ -3,10 +3,18 @@ import { prisma } from "@/lib/prisma";
 
 const DORM_CAPACITY = 10;
 
-// GET /api/disponibilidad?tipo=dorm|privada|departamento
+const VALID_TIPOS = [
+  "dorm",
+  "privada-picos",
+  "privada-cuevas",
+  "privada-huemul",
+  "departamento",
+];
+
+// GET /api/disponibilidad?tipo=dorm|privada-picos|privada-cuevas|privada-huemul|departamento
 export async function GET(req: NextRequest) {
   const tipo = req.nextUrl.searchParams.get("tipo");
-  if (!tipo || !["dorm", "privada", "departamento"].includes(tipo)) {
+  if (!tipo || !VALID_TIPOS.includes(tipo)) {
     return NextResponse.json({ error: "Tipo inválido." }, { status: 400 });
   }
 
@@ -41,7 +49,7 @@ export async function GET(req: NextRequest) {
       if (used >= DORM_CAPACITY) blocked.add(date);
     }
   } else {
-    // privada / departamento: any reservation blocks the dates
+    // privada-* / departamento: any reservation on that specific room blocks the dates
     for (const r of reservas) {
       const cursor = new Date(r.checkIn);
       cursor.setHours(0, 0, 0, 0);

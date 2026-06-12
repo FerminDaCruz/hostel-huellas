@@ -122,7 +122,9 @@ export function EditarReservaModal({ reserva, onClose, onSuccess }: Props) {
                 onChange={(e) => set("tipoAlojamiento", e.target.value)}
               >
                 <option value="dorm">Dormitorio compartido</option>
-                <option value="privada">Habitación privada</option>
+                <option value="privada-picos">Hab. 3 Picos</option>
+                <option value="privada-cuevas">Hab. Cuevas</option>
+                <option value="privada-huemul">Hab. Huemul</option>
                 <option value="departamento">Departamento</option>
               </select>
             </div>

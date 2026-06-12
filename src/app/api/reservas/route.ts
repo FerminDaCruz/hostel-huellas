@@ -34,9 +34,13 @@ function getIp(req: NextRequest): string {
 // ─── Capacity per type ────────────────────────────────────────────────────────
 const MAX_PERSONAS: Record<string, number> = {
   dorm: 10,
-  privada: 2,
-  departamento: 3,
+  "privada-picos": 3,
+  "privada-cuevas": 2,
+  "privada-huemul": 3,
+  departamento: 4,
 };
+
+const VALID_TIPOS = Object.keys(MAX_PERSONAS);
 
 // ─── POST /api/reservas ───────────────────────────────────────────────────────
 export async function POST(req: NextRequest) {
@@ -82,7 +86,7 @@ export async function POST(req: NextRequest) {
   }
 
   const tipo = String(body.tipoAlojamiento);
-  if (!["dorm", "privada", "departamento"].includes(tipo)) {
+  if (!VALID_TIPOS.includes(tipo)) {
     return NextResponse.json({ error: "Tipo de alojamiento inválido." }, { status: 400 });
   }
 
@@ -103,6 +107,7 @@ export async function POST(req: NextRequest) {
 
   // Real-time availability check
   if (tipo === "dorm") {
+    // Dorm: shared capacity across all dorm reservations
     // Dorm has shared capacity: check that no night in the range exceeds DORM_CAPACITY
     const overlapping = await prisma.reserva.findMany({
       where: {
@@ -143,7 +148,7 @@ export async function POST(req: NextRequest) {
       cursor.setDate(cursor.getDate() + 1);
     }
   } else {
-    // privada / departamento: any overlap is a conflict
+    // privada-* / departamento: each specific room — any overlap is a conflict
     const conflict = await prisma.reserva.findFirst({
       where: {
         tipoAlojamiento: tipo,

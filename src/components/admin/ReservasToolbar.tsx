@@ -97,7 +97,9 @@ export function ReservasToolbar({
       >
         <option value="todas">Todos los tipos</option>
         <option value="dorm">Dormitorio compartido</option>
-        <option value="privada">Habitación privada</option>
+        <option value="privada-picos">Hab. 3 Picos</option>
+        <option value="privada-cuevas">Hab. Cuevas</option>
+        <option value="privada-huemul">Hab. Huemul</option>
         <option value="departamento">Departamento</option>
       </select>
 

@@ -7,18 +7,34 @@ import "react-day-picker/style.css";
 import { es } from "date-fns/locale";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
-type Tipo = "dorm" | "privada" | "departamento";
+type Category = "dorm" | "privada" | "departamento";
 
-const TIPO_OPTIONS: { value: Tipo; label: string; desc: string }[] = [
+type PrivateRoom = {
+  slug: string;
+  title: string;
+  capacity: string;
+  maxPersonas: number;
+  desc: string;
+};
+
+const CATEGORY_OPTIONS: { value: Category; label: string; desc: string }[] = [
   { value: "dorm", label: "Dormitorio compartido", desc: "Hasta 10 personas" },
-  { value: "privada", label: "Habitación privada", desc: "Hasta 2 personas" },
-  { value: "departamento", label: "Departamento", desc: "Hasta 3 personas" },
+  { value: "privada", label: "Habitación privada", desc: "3 opciones disponibles" },
+  { value: "departamento", label: "Departamento", desc: "Hasta 4 personas" },
 ];
 
-const MAX_PERSONAS: Record<Tipo, number> = {
+const PRIVATE_ROOMS: PrivateRoom[] = [
+  { slug: "privada-picos", title: "Habitación 3 Picos", capacity: "1, 2 o 3 personas", maxPersonas: 3, desc: "Vista a los tres picos" },
+  { slug: "privada-cuevas", title: "Habitación Cuevas", capacity: "1 o 2 personas", maxPersonas: 2, desc: "Rústica e íntima" },
+  { slug: "privada-huemul", title: "Habitación Huemul", capacity: "1, 2 o 3 personas", maxPersonas: 3, desc: "Amplia y luminosa" },
+];
+
+const MAX_PERSONAS: Record<string, number> = {
   dorm: 10,
-  privada: 2,
-  departamento: 3,
+  "privada-picos": 3,
+  "privada-cuevas": 2,
+  "privada-huemul": 3,
+  departamento: 4,
 };
 
 type Huesped = { nombre: string; apellido: string };
@@ -47,7 +63,8 @@ function formatDate(date: Date | undefined): string {
 export function ReservaForm({ isAdmin = false, onSuccess }: Props) {
   const modalId = useId();
 
-  const [tipo, setTipo] = useState<Tipo | null>(null);
+  const [category, setCategory] = useState<Category | null>(null);
+  const [tipo, setTipo] = useState<string | null>(null); // full slug sent to API
   const [range, setRange] = useState<DateRange | undefined>(undefined);
   const [blockedDates, setBlockedDates] = useState<Date[]>([]);
   const [loadingDates, setLoadingDates] = useState(false);
@@ -66,7 +83,7 @@ export function ReservaForm({ isAdmin = false, onSuccess }: Props) {
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [apiError, setApiError] = useState("");
 
-  // Fetch blocked dates when tipo changes
+  // Fetch blocked dates when the specific tipo (slug) changes
   useEffect(() => {
     if (!tipo) return;
     setRange(undefined);
@@ -123,8 +140,12 @@ export function ReservaForm({ isAdmin = false, onSuccess }: Props) {
     e.preventDefault();
     setValidationError("");
 
-    if (!tipo) {
+    if (!category) {
       setValidationError("Seleccioná un tipo de alojamiento.");
+      return;
+    }
+    if (category === "privada" && !tipo) {
+      setValidationError("Seleccioná una habitación privada.");
       return;
     }
     if (!range?.from || !range?.to) {
@@ -214,7 +235,7 @@ export function ReservaForm({ isAdmin = false, onSuccess }: Props) {
   today.setHours(0, 0, 0, 0);
   const maxDate = new Date(today);
   maxDate.setMonth(maxDate.getMonth() + 6);
-  const maxPersonas = tipo ? MAX_PERSONAS[tipo] : 10;
+  const maxPersonas = tipo ? (MAX_PERSONAS[tipo] ?? 10) : 10;
 
   // ── Success state (standalone, not inside admin modal) ─────────────────────
   if (status === "success" && !onSuccess) {
@@ -292,16 +313,21 @@ export function ReservaForm({ isAdmin = false, onSuccess }: Props) {
               Tipo de alojamiento
             </p>
             <div className="grid sm:grid-cols-3 gap-3">
-              {TIPO_OPTIONS.map((opt) => (
+              {CATEGORY_OPTIONS.map((opt) => (
                 <button
                   key={opt.value}
                   type="button"
                   onClick={() => {
-                    setTipo(opt.value);
+                    setCategory(opt.value);
+                    if (opt.value !== "privada") {
+                      setTipo(opt.value);
+                    } else {
+                      setTipo(null); // wait for specific room selection
+                    }
                     handleCantPersonas(1);
                   }}
                   className={`border rounded-sm p-4 text-left transition-all ${
-                    tipo === opt.value
+                    category === opt.value
                       ? "border-forest bg-forest/5 shadow-sm"
                       : "border-ink/15 bg-white hover:border-ink/30"
                   }`}
@@ -311,10 +337,40 @@ export function ReservaForm({ isAdmin = false, onSuccess }: Props) {
                 </button>
               ))}
             </div>
+
+            {/* Private room sub-panel */}
+            {category === "privada" && (
+              <div className="mt-4">
+                <p className="text-[11px] uppercase tracking-[0.2em] text-ink/50 font-semibold mb-3">
+                  Elegí la habitación
+                </p>
+                <div className="grid sm:grid-cols-3 gap-3">
+                  {PRIVATE_ROOMS.map((room) => (
+                    <button
+                      key={room.slug}
+                      type="button"
+                      onClick={() => {
+                        setTipo(room.slug);
+                        handleCantPersonas(1);
+                      }}
+                      className={`border rounded-sm p-4 text-left transition-all ${
+                        tipo === room.slug
+                          ? "border-clay bg-clay/5 shadow-sm"
+                          : "border-ink/15 bg-white hover:border-ink/30"
+                      }`}
+                    >
+                      <p className="font-medium text-sm text-ink">{room.title}</p>
+                      <p className="text-[11px] font-semibold text-clay mt-1">{room.capacity}</p>
+                      <p className="text-[11px] text-ink/40 mt-0.5">{room.desc}</p>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
 
           {/* ── Fechas ── */}
-          {tipo && (
+          {tipo && category && (
             <div>
               <p className="text-[11px] uppercase tracking-[0.2em] text-ink/60 font-semibold mb-4">
                 Fechas
@@ -344,7 +400,7 @@ export function ReservaForm({ isAdmin = false, onSuccess }: Props) {
           )}
 
           {/* ── Datos personales ── */}
-          {tipo && (
+          {tipo && category && (
             <div className="space-y-5">
               <p className="text-[11px] uppercase tracking-[0.2em] text-ink/60 font-semibold">
                 Titular de la reserva
@@ -472,7 +528,7 @@ export function ReservaForm({ isAdmin = false, onSuccess }: Props) {
 
           <button
             type="submit"
-            disabled={!tipo}
+            disabled={!category || (category === "privada" && !tipo)}
             className="w-full bg-forest text-paper py-4 rounded-sm text-sm font-medium uppercase tracking-[0.2em] hover:bg-moss hover:scale-[1.01] transition-all shadow-lg disabled:opacity-40 disabled:cursor-not-allowed disabled:scale-100"
           >
             Confirmar reserva
@@ -523,7 +579,7 @@ export function ReservaForm({ isAdmin = false, onSuccess }: Props) {
 
                 <div className="px-6 py-5 space-y-3 text-sm">
                   <Row label="Alojamiento">
-                    {TIPO_OPTIONS.find((o) => o.value === tipo)?.label}
+                    {PRIVATE_ROOMS.find((r) => r.slug === tipo)?.title ?? CATEGORY_OPTIONS.find((o) => o.value === tipo)?.label}
                   </Row>
                   <Row label="Check-in">{formatDate(range?.from)}</Row>
                   <Row label="Check-out">{formatDate(range?.to)}</Row>

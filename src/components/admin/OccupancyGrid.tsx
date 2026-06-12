@@ -44,25 +44,19 @@ export function OccupancyGrid({ reservas }: Props) {
   const data = days.map((day) => ({
     day,
     dorm: reservas
-      .filter(
-        (r) =>
-          r.tipoAlojamiento === "dorm" && isNight(day, r.checkIn, r.checkOut),
-      )
+      .filter((r) => r.tipoAlojamiento === "dorm" && isNight(day, r.checkIn, r.checkOut))
       .reduce((s, r) => s + r.cantPersonas, 0),
-    privada: reservas.some(
-      (r) =>
-        r.tipoAlojamiento === "privada" && isNight(day, r.checkIn, r.checkOut),
-    ),
-    depto: reservas.some(
-      (r) =>
-        r.tipoAlojamiento === "departamento" &&
-        isNight(day, r.checkIn, r.checkOut),
-    ),
+    picos: reservas.some((r) => r.tipoAlojamiento === "privada-picos" && isNight(day, r.checkIn, r.checkOut)),
+    cuevas: reservas.some((r) => r.tipoAlojamiento === "privada-cuevas" && isNight(day, r.checkIn, r.checkOut)),
+    huemul: reservas.some((r) => r.tipoAlojamiento === "privada-huemul" && isNight(day, r.checkIn, r.checkOut)),
+    depto: reservas.some((r) => r.tipoAlojamiento === "departamento" && isNight(day, r.checkIn, r.checkOut)),
   }));
 
   const rows = [
     { label: "Dormitorio", key: "dorm" as const },
-    { label: "Privada", key: "privada" as const },
+    { label: "3 Picos", key: "picos" as const },
+    { label: "Cuevas", key: "cuevas" as const },
+    { label: "Huemul", key: "huemul" as const },
     { label: "Depto.", key: "depto" as const },
   ];
 
@@ -142,8 +136,8 @@ export function OccupancyGrid({ reservas }: Props) {
                     bg = dormBg(d.dorm);
                     label = d.dorm > 0 ? `${d.dorm}/${DORM_CAP}` : "";
                   } else {
-                    const occ = row.key === "privada" ? d.privada : d.depto;
-                    bg = binaryBg(occ);
+                    const occ = d[row.key];
+                    bg = binaryBg(occ as boolean);
                     label = occ ? <FaBed className="w-4 h-4" /> : null;
                   }
 

@@ -73,7 +73,7 @@ export function AdminDashboard({ reservas: initialReservas }: { reservas: Reserv
   const nextCheckIn = upcoming[0] ? fmt(upcoming[0].checkIn) : "—";
 
   // ── Chart derived data ───────────────────────────────────────────────────────
-  const byTipo = ["dorm", "privada", "departamento"].map((t) => ({
+  const byTipo = ["dorm", "privada-picos", "privada-cuevas", "privada-huemul", "departamento"].map((t) => ({
     tipo: t,
     count: reservas.filter((r) => r.tipoAlojamiento === t).length,
     upcoming: upcoming.filter((r) => r.tipoAlojamiento === t).length,
