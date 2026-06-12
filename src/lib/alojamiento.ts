@@ -172,10 +172,6 @@ export const habitaciones: Habitacion[] = [
       "/assets/habitaciones/depto-2.jpg",
       "/assets/habitaciones/depto-3.jpg",
       "/assets/habitaciones/depto-4.jpg",
-      "/assets/habitaciones/living-1.jpg",
-      "/assets/habitaciones/cocina-1.jpg",
-      "/assets/habitaciones/cocina-2.jpg",
-      "/assets/habitaciones/cocina-3.jpg",
     ],
     includes: [
       "Departamento completo con living",

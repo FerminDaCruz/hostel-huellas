@@ -193,6 +193,10 @@ export function ReservaForm({ isAdmin = false, onSuccess }: Props) {
           setShowModal(false);
           onSuccess();
         }, 1500);
+      } else {
+        // Without onSuccess the component switches to a page-level success section,
+        // so we must clear showModal here — otherwise the overflow lock never lifts.
+        setShowModal(false);
       }
     } catch {
       setApiError("Error de conexión. Intentá de nuevo o escribinos por WhatsApp.");

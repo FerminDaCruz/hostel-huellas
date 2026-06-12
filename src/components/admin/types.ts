@@ -1,5 +1,7 @@
 export type Huesped = { nombre: string; apellido: string };
 
+export type Pago = { fecha: string; monto: number; nota?: string };
+
 export type Reserva = {
   id: string;
   creadoEn: Date;
@@ -14,6 +16,9 @@ export type Reserva = {
   cantPersonas: number;
   huespedes: unknown;
   creadaPorAdmin: boolean;
+  montoTotal: number | null;
+  montoPagado: number;
+  pagos: unknown;
 };
 
 export type MonthData = { label: string; count: number };

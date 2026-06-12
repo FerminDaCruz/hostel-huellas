@@ -9,7 +9,6 @@ const navLinks = [
   { href: "/alojamiento", label: "Alojamiento" },
   { href: "/experiencias", label: "Experiencias" },
   { href: "/lagopuelo", label: "Lago Puelo" },
-  { href: "/galeria", label: "Galería" },
   { href: "/nosotros", label: "Nosotros" },
   { href: "/contacto", label: "Contacto" },
 ];

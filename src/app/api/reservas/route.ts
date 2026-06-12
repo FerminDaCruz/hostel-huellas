@@ -176,21 +176,17 @@ export async function POST(req: NextRequest) {
     },
   });
 
-  // Send confirmation emails — non-blocking for the reservation itself
-  try {
-    await sendReservationEmails({
-        id: reserva.id,
-        nombre: reserva.nombre,
-        apellido: reserva.apellido,
-        email: reserva.email,
-        checkIn: reserva.checkIn,
-        checkOut: reserva.checkOut,
-        tipoAlojamiento: reserva.tipoAlojamiento,
-        cantPersonas: reserva.cantPersonas,
-      });
-  } catch (err) {
-    console.error("[email] failed to send reservation emails:", err);
-  }
+  // Fire-and-forget: do not await so the API responds immediately
+  sendReservationEmails({
+    id: reserva.id,
+    nombre: reserva.nombre,
+    apellido: reserva.apellido,
+    email: reserva.email,
+    checkIn: reserva.checkIn,
+    checkOut: reserva.checkOut,
+    tipoAlojamiento: reserva.tipoAlojamiento,
+    cantPersonas: reserva.cantPersonas,
+  }).catch((err) => console.error("[email] failed:", err));
 
   return NextResponse.json({ ok: true, id: reserva.id });
 }

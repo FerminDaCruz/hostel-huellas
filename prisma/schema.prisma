@@ -20,4 +20,7 @@ model Reserva {
   cantPersonas    Int
   huespedes       Json     // { nombre: string, apellido: string }[]
   creadaPorAdmin  Boolean  @default(false)
+  montoTotal      Float?
+  montoPagado     Float    @default(0)
+  pagos           Json     @default("[]") // { fecha: string, monto: number, nota?: string }[]
 }
