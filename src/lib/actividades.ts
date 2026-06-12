@@ -23,7 +23,12 @@ export const actividades: Actividad[] = [
     duracion: "6 a 8 horas",
     llevar:
       "Agua abundante (especialmente en verano), snacks, ropa de abrigo, bastones opcionales",
-    img: "/exp-trek.jpg",
+    img: "/assets/experiencias/cerro-currumahuida-cumbre.webp",
+    images: [
+      "/assets/experiencias/cerro-currumahuida-cumbre.webp",
+      "/assets/experiencias/cerro-currumahuida-vista-lagunas.jpg",
+      "/assets/experiencias/cerro-churrumahuida-cartel.webp",
+    ],
     tag: "Trekking",
   },
   {
@@ -36,7 +41,8 @@ export const actividades: Actividad[] = [
     duracion: "2 a 4 horas",
     llevar:
       "Ropa para mojarse, protector solar, chaleco salvavidas (incluido en alquiler)",
-    img: "/exp-trek.jpg",
+    img: "/assets/experiencias/kayak-lago-puelo.jpg",
+    images: ["/assets/experiencias/kayak-lago-puelo.jpg"],
     tag: "Agua",
   },
   {
@@ -48,7 +54,12 @@ export const actividades: Actividad[] = [
     dificultad: "Fácil",
     duracion: "3 a 4 horas",
     llevar: "Calzado cómodo, agua, algo para comer",
-    img: "/exp-trek.jpg",
+    img: "/assets/experiencias/mirador-rio-blanco.webp",
+    images: [
+      "/assets/experiencias/mirador-rio-blanco.webp",
+      "/assets/experiencias/mirador-rio-blanco-2.webp",
+      "/assets/experiencias/mirador-rio-blanco-cartel.webp",
+    ],
     tag: "Caminata familiar",
   },
   {
@@ -60,7 +71,11 @@ export const actividades: Actividad[] = [
     dificultad: "Fácil",
     duracion: "1 a 2 horas",
     llevar: "Impermeable, calzado cómodo",
-    img: "/exp-trek.jpg",
+    img: "/assets/experiencias/bosque-de-las-sombras-lagopuelo-1.jpg",
+    images: [
+      "/assets/experiencias/bosque-de-las-sombras-lagopuelo-1.jpg",
+      "/assets/experiencias/bosque-de-las-sombras-cartel.jpg",
+    ],
     tag: "Bosque nativo",
   },
   {
@@ -72,7 +87,8 @@ export const actividades: Actividad[] = [
     dificultad: "Media",
     duracion: "4 a 5 horas (solo ida)",
     llevar: "Mochila completa, sleeping si se pernocta, comida extra",
-    img: "/exp-trek.jpg",
+    img: "/assets/experiencias/refugio-el-motoco.webp",
+    images: ["/assets/experiencias/refugio-el-motoco.webp"],
     tag: "Trekking con pernocte",
   },
   {
@@ -85,7 +101,11 @@ export const actividades: Actividad[] = [
     duracion: "Día completo o 2 días con acampe",
     llevar:
       "DNI o pasaporte, equipo de acampe si se queda, agua y comida para el día",
-    img: "/exp-trek.jpg",
+    img: "/assets/experiencias/sendero-los-hitos.jpg",
+    images: [
+      "/assets/experiencias/sendero-los-hitos.jpg",
+      "/assets/experiencias/sendero-los-hitos-2.jpg",
+    ],
     tag: "Trekking largo",
   },
   {
