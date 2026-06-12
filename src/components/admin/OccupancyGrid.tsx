@@ -1,11 +1,8 @@
 "use client";
 
-type Reserva = {
-  checkIn: Date;
-  checkOut: Date;
-  tipoAlojamiento: string;
-  cantPersonas: number;
-};
+import { FaBed, FaUsers } from "react-icons/fa";
+import type { Reserva } from "./types";
+import { ReactNode } from "react";
 
 const DORM_CAP = 10;
 const DAYS = 60;
@@ -29,10 +26,12 @@ function dormBg(n: number): string {
 }
 
 function binaryBg(occupied: boolean): string {
-  return occupied ? "#EF9A9A" : "#C8E6C9";
+  return occupied ? "#EF9A9A" : "#F5F0E8";
 }
 
-export function OccupancyGrid({ reservas }: { reservas: Reserva[] }) {
+type Props = { reservas: Reserva[] };
+
+export function OccupancyGrid({ reservas }: Props) {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
@@ -45,13 +44,19 @@ export function OccupancyGrid({ reservas }: { reservas: Reserva[] }) {
   const data = days.map((day) => ({
     day,
     dorm: reservas
-      .filter((r) => r.tipoAlojamiento === "dorm" && isNight(day, r.checkIn, r.checkOut))
+      .filter(
+        (r) =>
+          r.tipoAlojamiento === "dorm" && isNight(day, r.checkIn, r.checkOut),
+      )
       .reduce((s, r) => s + r.cantPersonas, 0),
     privada: reservas.some(
-      (r) => r.tipoAlojamiento === "privada" && isNight(day, r.checkIn, r.checkOut)
+      (r) =>
+        r.tipoAlojamiento === "privada" && isNight(day, r.checkIn, r.checkOut),
     ),
     depto: reservas.some(
-      (r) => r.tipoAlojamiento === "departamento" && isNight(day, r.checkIn, r.checkOut)
+      (r) =>
+        r.tipoAlojamiento === "departamento" &&
+        isNight(day, r.checkIn, r.checkOut),
     ),
   }));
 
@@ -69,11 +74,11 @@ export function OccupancyGrid({ reservas }: { reservas: Reserva[] }) {
 
       <div className="overflow-x-auto">
         <div style={{ minWidth: `${LABEL_W + DAYS * COL_W}px` }}>
-
           {/* Month labels */}
           <div className="flex" style={{ marginLeft: LABEL_W }}>
             {days.map((day, i) => {
-              const newMonth = i === 0 || day.getMonth() !== days[i - 1].getMonth();
+              const newMonth =
+                i === 0 || day.getMonth() !== days[i - 1].getMonth();
               return (
                 <div key={i} style={{ width: COL_W, flexShrink: 0 }}>
                   {newMonth && (
@@ -99,13 +104,19 @@ export function OccupancyGrid({ reservas }: { reservas: Reserva[] }) {
                 >
                   <div
                     className={`text-[11px] font-bold leading-none ${
-                      isToday ? "text-clay" : isWeekend ? "text-forest/70" : "text-ink/35"
+                      isToday
+                        ? "text-clay"
+                        : isWeekend
+                          ? "text-forest/70"
+                          : "text-ink/35"
                     }`}
                   >
                     {day.getDate()}
                   </div>
                   <div className="text-[9px] text-ink/25 mt-0.5">
-                    {day.toLocaleDateString("es-AR", { weekday: "short" }).slice(0, 2)}
+                    {day
+                      .toLocaleDateString("es-AR", { weekday: "short" })
+                      .slice(0, 2)}
                   </div>
                 </div>
               );
@@ -116,20 +127,16 @@ export function OccupancyGrid({ reservas }: { reservas: Reserva[] }) {
           <div className="space-y-[3px] mt-2">
             {rows.map((row) => (
               <div key={row.key} className="flex items-center">
-                {/* Row label */}
                 <div
                   style={{ width: LABEL_W, flexShrink: 0 }}
                   className="text-[11px] text-ink/55 font-medium pr-3 truncate"
                 >
                   {row.label}
                 </div>
-
-                {/* Cells */}
                 {data.map((d, i) => {
                   const isToday = d.day.getTime() === today.getTime();
-
                   let bg: string;
-                  let label: string;
+                  let label: ReactNode;
 
                   if (row.key === "dorm") {
                     bg = dormBg(d.dorm);
@@ -137,22 +144,24 @@ export function OccupancyGrid({ reservas }: { reservas: Reserva[] }) {
                   } else {
                     const occ = row.key === "privada" ? d.privada : d.depto;
                     bg = binaryBg(occ);
-                    label = occ ? "✗" : "✓";
+                    label = occ ? <FaBed className="w-4 h-4" /> : null;
                   }
 
                   return (
                     <div
                       key={i}
-                      title={`${d.day.toLocaleDateString("es-AR", { weekday: "long", day: "numeric", month: "long" })}${
-                        row.key === "dorm"
-                          ? ` — ${d.dorm}/${DORM_CAP} camas`
-                          : ""
-                      }`}
+                      title={`${d.day.toLocaleDateString("es-AR", {
+                        weekday: "long",
+                        day: "numeric",
+                        month: "long",
+                      })}${row.key === "dorm" ? ` — ${d.dorm}/${DORM_CAP} camas` : ""}`}
                       style={{
                         width: COL_W,
                         flexShrink: 0,
                         backgroundColor: bg,
-                        outline: isToday ? "2px solid #A0785A" : "1px solid #EDE8DF",
+                        outline: isToday
+                          ? "2px solid #A0785A"
+                          : "1px solid #EDE8DF",
                         outlineOffset: "-1px",
                       }}
                       className="h-8 flex items-center justify-center text-[10px] font-semibold text-ink/60 cursor-default"
